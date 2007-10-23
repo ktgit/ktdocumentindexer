@@ -128,7 +128,7 @@ public class IndexerManager implements Formatter
 			.append("\"countAdded\":").append(this.documentsAddCount).append(",")
 			.append("\"countDeleted\":").append(this.documentsDeleteCount).append(",")
 			.append("\"countOptimised\":").append(this.optimiseCount).append(",")
-			.append("\"countQuery\":").append(this.queryCount)
+			.append("\"countQuery\":").append(this.queryCount).append(",")
 			.append("\"countDocuments\":").append(numDocs)
 			.append('}'); 
 		
