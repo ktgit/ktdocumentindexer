@@ -440,7 +440,7 @@ public class IndexerManager implements Formatter
 		
 		Highlighter highlighter =new Highlighter( this,new QueryScorer(query));
 		highlighter.setTextFragmenter(new SimpleFragmenter(this.resultFragmentSize));		
-		for (int i = 0; i < hits.length(); i++)
+		for (int i = 0; i < max; i++)
 		{
 			Document doc = hits.doc(i);			
 			 
