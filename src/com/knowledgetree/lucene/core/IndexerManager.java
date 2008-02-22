@@ -42,6 +42,7 @@ import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.SimpleFragmenter;
 import org.apache.lucene.search.highlight.TokenGroup;
+import org.apache.lucene.search.TermQuery;
 
 import com.knowledgetree.lucene.KTLuceneServer;
 
@@ -546,7 +547,7 @@ public class IndexerManager implements Formatter
 		// create the lucene document
 		 
 		Document document = new Document();		
-		document.add(new Field("DocumentID", IndexerManager.longToString(documentId), Field.Store.YES, Field.Index.UN_TOKENIZED));
+		document.add(new Field("DocumentID", IndexerManager.longToString(documentId), Field.Store.YES, Field.Index.TOKENIZED));
 		document.add(new Field("Content", content, Field.Store.YES, Field.Index.TOKENIZED));
 		document.add(new Field("Discussion", discussion, Field.Store.YES, Field.Index.TOKENIZED));
 		document.add(new Field("Title", title, Field.Store.YES, Field.Index.TOKENIZED));
@@ -556,6 +557,9 @@ public class IndexerManager implements Formatter
 		try 
 		{
 			this.logger.debug("Opening index writer: documentid=" + documentId);
+			this.logger.debug("DocumentID: " + IndexerManager.longToString(documentId));
+			this.logger.debug("Content: " + content);
+			this.logger.debug("Discussion: " + discussion);
 			IndexWriter writer = new IndexWriter(this.indexDirectory, this.analyzer, false);
 			writer.addDocument(document);
 			writer.close();
@@ -578,11 +582,15 @@ public class IndexerManager implements Formatter
 	public void updateDiscussion(int documentId, String discussion) throws Exception 
 	{
 		this.logger.debug("updateDiscussion: documentid=" + documentId);
-		QueryParser parser=new QueryParser("Content", this.analyzer);
-		Query query = parser.parse("DocumentID: " + IndexerManager.longToString(documentId));
-	 		
-		Hits hits = this.querySearcher.search(query);							
-		 
+		QueryParser parser=new QueryParser("DocumentID", this.analyzer);
+		Query query = new TermQuery(new Term("DocumentID",IndexerManager.longToString(documentId))); 
+
+		query=query.rewrite(this.queryReader);
+ 
+		// run the search!
+		Hits hits = this.querySearcher.search(query);
+		boolean found = false;
+		
 		for (int i = 0; i < hits.length(); i++)
 		{
 			Document doc = hits.doc(i);	
@@ -593,9 +601,15 @@ public class IndexerManager implements Formatter
 			
 			this.deleteDocument(documentId);
 			this.addLuceneDocument(documentId, content, discussion, title, version);
+			found = true;
 			
 			break; // there shouldn't be others...
-		}		
+		}
+		if (!found)
+		{
+			// there is no content
+			this.addLuceneDocument(documentId, "", discussion, "", "");
+		}	
 	}
 	
 	/**
