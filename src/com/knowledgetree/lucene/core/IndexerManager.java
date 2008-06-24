@@ -287,23 +287,23 @@ public class IndexerManager implements Formatter
 	 */
 	public boolean documentExists(int documentId) throws IOException
 	{		
-		QueryParser parser = new QueryParser("Content", this.analyzer);
+		QueryParser parser=new QueryParser("DocumentID", this.analyzer);
+		
 		ReadLock lock = this.locker.readLock();
 		lock.lock();		 
 		try
 		{			
 			try 
 			{
-				Query query  = parser.parse("documentid:" + IndexerManager.longToString(documentId));
+				Query query = new TermQuery(new Term("DocumentID",IndexerManager.longToString(documentId))); 
+
+				query=query.rewrite(this.queryReader);
+ 
+				// run the search!
 				Hits hits = this.querySearcher.search(query);
 				boolean found = (hits.length() > 0);
 				this.logger.debug("Checking document exists documentId=" +documentId + " result="+found);
 				return found;
-			} 
-			catch (ParseException e) 
-			{
-				// should not happen
-				return false;
 			} 
 			catch (IOException ex) 
 			{
