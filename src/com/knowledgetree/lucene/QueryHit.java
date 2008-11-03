@@ -6,7 +6,7 @@
  *
  */
 
-package com.knowledgetree.lucene.core;
+package com.knowledgetree.lucene;
 
 import java.io.Serializable;
 

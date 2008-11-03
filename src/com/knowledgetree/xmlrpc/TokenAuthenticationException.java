@@ -1,4 +1,6 @@
-package com.knowledgetree.lucene.core;
+package com.knowledgetree.xmlrpc;
+
+import com.knowledgetree.lucene.IndexerManager;
 
 @SuppressWarnings("serial")
 public class TokenAuthenticationException extends Exception {

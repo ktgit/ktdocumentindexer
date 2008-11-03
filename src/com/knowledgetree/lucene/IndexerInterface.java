@@ -6,7 +6,9 @@
  *
  */
 
-package com.knowledgetree.lucene.core;
+package com.knowledgetree.lucene;
+
+import com.knowledgetree.xmlrpc.TokenAuthenticationException;
 
 // TODO: ktid has been added for future use!
 // idea is that KT Live can pass ktid, which would mean one indexing server could manage multiple
@@ -123,33 +125,7 @@ public class IndexerInterface
 		return 0;
 	}
 	
-	/**
-	 * Shut the server down.
-	 * 
-	 * @return int
-	 * @throws Exception
-	 */
-	public int shutdown(String ktid,String token) throws Exception  
-	{
-		IndexerManager manager = IndexerManager.get();		
-		
-		if (!manager.authenticate(token))
-		{
-			throw new TokenAuthenticationException(token);
-		}
-		
-		try
-		{ 
-			manager.shutdown();
-		}
-		catch(Exception ex)
-		{
-			manager.getLogger().error(ex.getMessage());
-			return -1;
-		}
-		
-		return 0;
-	}
+	
 	
 
 	/**

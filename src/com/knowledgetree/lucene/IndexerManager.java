@@ -6,7 +6,7 @@
  *
  */
 
-package com.knowledgetree.lucene.core;
+package com.knowledgetree.lucene;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -14,8 +14,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -31,7 +29,6 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
@@ -44,7 +41,7 @@ import org.apache.lucene.search.highlight.SimpleFragmenter;
 import org.apache.lucene.search.highlight.TokenGroup;
 import org.apache.lucene.search.TermQuery;
 
-import com.knowledgetree.lucene.KTLuceneServer;
+import com.knowledgetree.xmlrpc.KTXmlRpcServer;
 
 public class IndexerManager implements Formatter
 {
@@ -58,10 +55,7 @@ public class IndexerManager implements Formatter
 	private Logger 						logger;
 	private String 						indexDirectory 		= "c:/kt/ktlucene/indexes";
 	private String						propertiesFilename 	= "KnowledgeTreeIndexer.properties";
-	private int 						port 				= 8875;
 	private String 						clientIps 			= "127.0.0.1,192.168.1.1";
-	private boolean 					paranoid 			= true;
-//	private int 						threadDelay 		= 1000;
 	private int							maxQueryResult		= 100;
 	private Date						startDate;
 	private	int							documentsAddCount	= 0;
@@ -71,13 +65,8 @@ public class IndexerManager implements Formatter
 	private	int							resultFragments		= 3;
 	private String						resultSeperator		= "...";
 	private	int							resultFragmentSize	= 40;
-	private String						authenticationToken = "";
 	
-	// basic getter() functions
-	public int getPort() 				{ return port; }
-	public boolean isParanoid() 		{ return paranoid; }
-	public String[] getAcceptableIps() 	{ return clientIps.split(","); }
-//	public long getThreadDelay() 		{ return threadDelay; }	
+	// basic getter() functions	
 	public Logger getLogger()			{ return logger; }
 	
 	/**
@@ -88,8 +77,7 @@ public class IndexerManager implements Formatter
 	 */
 	public boolean authenticate(String token)
 	{
-		// TODO: THIS IS REALLY PRIMITIVE!!!! WE SHOULD MD5 
-		return this.authenticationToken.equals(token); 
+		return KTXmlRpcServer.get().authenticate(token); 
 	}
 	
 	/**
@@ -124,7 +112,6 @@ public class IndexerManager implements Formatter
 			.append("\"dateStarted\":\"").append(this.startDate).append("\",")
 			.append("\"dateNow\":\"").append(new Date()).append("\",")
 			.append("\"indexDirectory\":\"").append(this.indexDirectory).append("\",")
-			.append("\"clientIpAddrs\":\"").append(this.clientIps).append("\",")
 			.append("\"queryResultMax\":").append(this.maxQueryResult).append(",")
 			.append("\"countAdded\":").append(this.documentsAddCount).append(",")
 			.append("\"countDeleted\":").append(this.documentsDeleteCount).append(",")
@@ -142,8 +129,8 @@ public class IndexerManager implements Formatter
 	 */
 	private IndexerManager() throws Exception 
 	{
-		this.logger  = Logger.getLogger("com.knowledgetree");		 
-		this.logger.info("Indexing Server starting up...");
+		this.logger  = Logger.getLogger("com.knowledgetree.lucene");		 
+		this.logger.info("Indexer starting up...");
 
 		this.analyzer = new StandardAnalyzer();
 		this.locker = new ReentrantReadWriteLock();
@@ -177,16 +164,12 @@ public class IndexerManager implements Formatter
 			throw new Exception("Index directory must be read and writable: " + this.indexDirectory);
 		}
 		
-		// get the default parameters
-		this.port = Integer.parseInt(properties.getProperty("server.port", Integer.toString(this.port)));
-		//this.threadDelay = Integer.parseInt(properties.getProperty("thread.delay", Integer.toString(this.threadDelay)));
-		this.paranoid = Boolean.parseBoolean(properties.getProperty("server.paranoid", Boolean.toString(this.paranoid)));		
-		this.clientIps = properties.getProperty("server.accept", clientIps);
+		
 		this.maxQueryResult = Integer.parseInt(properties.getProperty("query.max.results", Integer.toString(this.maxQueryResult)));
 		this.resultFragments = Integer.parseInt(properties.getProperty("result.fragments", Integer.toString(this.resultFragments)));
 		this.resultSeperator = properties.getProperty("result.fragment.seperator", this.resultSeperator);
 		this.resultFragmentSize = Integer.parseInt(properties.getProperty("result.fragment.size", Integer.toString(this.resultFragmentSize)));
-		this.authenticationToken =  properties.getProperty("auth.token", this.authenticationToken);
+
 		this.logger.info("Starting: " + this.startDate);
 		this.logger.info("Client IPs: " + this.clientIps);
 		this.logger.info("Max query result: " + this.maxQueryResult);
@@ -612,15 +595,7 @@ public class IndexerManager implements Formatter
 		}	
 	}
 	
-	/**
-	 * Shut the webserver down.
-	 *
-	 */
-	public void shutdown()
-	{
-		this.logger.info("Shutting down...");
-		KTLuceneServer.webServer.shutdown();
-	}
+	
 	
 	public String highlightTerm(String originalText , TokenGroup group)
 	{
