@@ -70,6 +70,7 @@ public class KTXmlRpcServer {
        
         phm.addHandler("indexer", com.knowledgetree.lucene.IndexerInterface.class);        
         phm.addHandler("textextraction", com.knowledgetree.textextraction.KTTextExtractorInterface.class);
+        phm.addHandler("metadata",com.knowledgetree.metadata.KTMetaDataInterface.class);
         phm.addHandler("control", com.knowledgetree.xmlrpc.KTXmlRpcServerInterface.class);
         
         xmlRpcServer.setHandlerMapping(phm);

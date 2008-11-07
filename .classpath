@@ -41,5 +41,6 @@
 	<classpathentry kind="lib" path="lib/xmlrpc-common-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/xmlrpc-server-3.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/tika-0.2-SNAPSHOT-standalone.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
