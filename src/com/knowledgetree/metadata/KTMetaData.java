@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.poi.hpsf.CustomProperties;
+import org.apache.poi.hpsf.CustomProperty;
 import org.apache.poi.hpsf.DocumentSummaryInformation;
 import org.apache.poi.hpsf.PropertySet;
 import org.apache.poi.hpsf.PropertySetFactory;
@@ -21,20 +22,20 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 
 @SuppressWarnings("unchecked")
-public class KTMetaDataInserter {
+public class KTMetaData {
 
-	private static KTMetaDataInserter metaDataInserter = null;
+	private static KTMetaData metaDataHandler = null;
 	
-	public KTMetaDataInserter() {
+	public KTMetaData() {
 		System.out.println("Instantiated");
 	}
 	
-	public static KTMetaDataInserter get() {
-		if(metaDataInserter == null) {
-			metaDataInserter = new KTMetaDataInserter();
+	public static KTMetaData get() {
+		if(metaDataHandler == null) {
+			metaDataHandler = new KTMetaData();
 		}
 		
-		return metaDataInserter;
+		return metaDataHandler;
 	}
 	
 	
@@ -128,5 +129,66 @@ public class KTMetaDataInserter {
 		
 		
 		return result;
+	}
+	
+	public java.util.Map readMetaData(byte[] data) {
+		/* Prepare our result */
+		java.util.Hashtable result = new java.util.Hashtable();
+		
+		POIFSFileSystem poifs;
+		
+		/* Converting our byte array into a byte stream for the POIFS adapter */
+		ByteArrayInputStream ba = new ByteArrayInputStream(data);
+		
+		try {
+		    poifs = new POIFSFileSystem(ba);
+		} catch(IOException e) {
+			/* Probably not a valid OLE2 document */
+			e.printStackTrace();
+			result.put("status", "1");
+			result.put("message", e.getMessage());
+			return result;
+		}
+		
+		DirectoryEntry dir = poifs.getRoot();
+		
+		DocumentSummaryInformation dsi;
+        try
+        {
+        	/* We are now going to get the virtual document out of the POIFS containing metadata */
+            DocumentEntry dsiEntry = (DocumentEntry)
+                dir.getEntry(DocumentSummaryInformation.DEFAULT_STREAM_NAME);
+            DocumentInputStream dis = new DocumentInputStream(dsiEntry);
+            PropertySet ps = new PropertySet(dis);
+            dis.close();
+            dsi = new DocumentSummaryInformation(ps);
+        }
+        catch (Exception ex)
+        {
+            /* There is no document summary information yet. We have to create a
+             * new one. */
+            dsi = PropertySetFactory.newDocumentSummaryInformation();
+        }
+		
+        
+        
+        CustomProperties customProperties = dsi.getCustomProperties();
+        
+        java.util.Hashtable metadata = new java.util.Hashtable();
+        
+        Set keys = customProperties.keySet();
+        Iterator iter = keys.iterator();
+        
+        while(iter.hasNext()) { /* Iterate through the keys and convert them to readable values */
+        	Object key = iter.next();
+        	CustomProperty p = (CustomProperty) customProperties.get(key); 
+        	metadata.put(p.getName(), p.getValue());
+        }
+        
+        
+        result.put("status", "0");
+        result.put("metadata", metadata);
+        
+        return result;
 	}
 }
