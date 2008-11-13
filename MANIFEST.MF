@@ -1,3 +1,24 @@
 Manifest-Version: 1.0
-Class-Path:  lib/commons-lang-2.3.jar lib/commons-logging-1.1.jar lib/log4j-1.2.14.jar lib/lucene-core-2.1.0.jar lib/ws-commons-util-1.0.1.jar lib/xmlrpc-common-3.0.jar lib/xmlrpc-server-3.0.jar lib/lucene-highlighter-2.1.0.jar lib/tika-0.2-SNAPSHOT-standalone.jar
 Main-Class: com.knowledgetree.xmlrpc.KTXmlRpcServer
+Class-Path: lib/commons-lang-2.3.jar lib/commons-logging-1.1.jar lib/log4j-1.2.14.jar lib/lucene-core-2.1.0.jar lib/ws-commons-util-1.0.1.jar lib/xmlrpc-common-3.0.jar lib/xmlrpc-server-3.0.jar lib/lucene-highlighter-2.1.0.jar 
+  lib/commons-codec-1.3.jar
+  lib/commons-io-1.4.jar
+  lib/fontbox-0.1.0.jar
+  lib/icu4j-3.4.4.jar
+  lib/junit-3.8.1.jar
+  lib/nekohtml-0.9.5.jar
+  lib/ooxml-lib/dom4j-1.6.1.jar
+  lib/ooxml-lib/jaxen-1.1.jar
+  lib/ooxml-lib/jsr173_1.0_api.jar
+  lib/ooxml-lib/ooxml-schemas.jar
+  lib/ooxml-lib/openxml4j-bin-beta-080728.jarr
+  lib/ooxml-lib/xercesImpl-2.8.1.jar
+  lib/ooxml-lib/xmlbeans-2.3.0.jar
+  lib/pdfbox-0.7.3.jar
+  lib/poi-3.5-beta3/poi-3.5-beta3-20080926.jar
+  lib/poi-3.5-beta3/poi-contrib-3.5-beta3-20080926.jar
+  lib/poi-3.5-beta3/poi-jdk14-3.5-beta3-20080926.jar
+  lib/poi-3.5-beta3/poi-ooxml-3.5-beta3-20080926.jar
+  lib/poi-3.5-beta3/poi-scratchpad-3.5-beta3-20080926.jar
+  lib/tika-0.2-SNAPSHOT.jar
+ 

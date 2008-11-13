@@ -26,10 +26,6 @@ public class KTMetaData {
 
 	private static KTMetaData metaDataHandler = null;
 	
-	public KTMetaData() {
-		System.out.println("Instantiated");
-	}
-	
 	public static KTMetaData get() {
 		if(metaDataHandler == null) {
 			metaDataHandler = new KTMetaData();
@@ -57,6 +53,7 @@ public class KTMetaData {
 			result.put("message", e.getMessage());
 			return result;
 		}
+	
 		
 		DirectoryEntry dir = poifs.getRoot();
 		
@@ -174,15 +171,23 @@ public class KTMetaData {
         
         CustomProperties customProperties = dsi.getCustomProperties();
         
+        
+        
         java.util.Hashtable metadata = new java.util.Hashtable();
+        
+        if(customProperties == null) {
+        	result.put("status", "0");
+        	result.put("metadata", metadata);
+        	return result;
+        }
         
         Set keys = customProperties.keySet();
         Iterator iter = keys.iterator();
         
         while(iter.hasNext()) { /* Iterate through the keys and convert them to readable values */
-        	Object key = iter.next();
-        	CustomProperty p = (CustomProperty) customProperties.get(key); 
-        	metadata.put(p.getName(), p.getValue());
+        	String key = (String)iter.next();
+        	String val = (String) customProperties.get(key);
+        	metadata.put(key, val);
         }
         
         

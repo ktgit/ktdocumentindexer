@@ -3,44 +3,35 @@
 	<classpathentry kind="src" path="lib/lucene-2.1.0/src/demo"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.3.jar"/>
-	<classpathentry kind="lib" path="lib/commons-lang-2.3/commons-lang-2.3-javadoc.jar"/>
-	<classpathentry kind="lib" path="lib/commons-lang-2.3/commons-lang-2.3-sources.jar"/>
-	<classpathentry kind="lib" path="lib/commons-lang-2.3/commons-lang-2.3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.14.jar"/>
-	<classpathentry kind="lib" path="lib/logging-log4j/log4j-1.2.14.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/analyzers/lucene-analyzers-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/ant/lucene-ant-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/benchmark/lucene-benchmark-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/highlighter/lucene-highlighter-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/lucli/lucene-lucli-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/memory/lucene-memory-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/misc/lucene-misc-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/queries/lucene-queries-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/regex/lucene-regex-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/similarity/lucene-similarity-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/snowball/lucene-snowball-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/spellchecker/lucene-spellchecker-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/surround/lucene-surround-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/swing/lucene-swing-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/wordnet/lucene-wordnet-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/contrib/xml-query-parser/lucene-xml-query-parser-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/lucene-core-2.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-2.1.0/lucene-demos-2.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-core-2.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-highlighter-2.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/ws-commons-util-1.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/xmlrpc-3.0/lib/commons-logging-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/xmlrpc-3.0/lib/ws-commons-util-1.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/xmlrpc-3.0/lib/xmlrpc-client-3.0-sources.jar"/>
-	<classpathentry kind="lib" path="lib/xmlrpc-3.0/lib/xmlrpc-client-3.0.jar"/>
-	<classpathentry kind="lib" path="lib/xmlrpc-3.0/lib/xmlrpc-common-3.0-sources.jar"/>
-	<classpathentry kind="lib" path="lib/xmlrpc-3.0/lib/xmlrpc-common-3.0.jar"/>
-	<classpathentry kind="lib" path="lib/xmlrpc-3.0/lib/xmlrpc-server-3.0-sources.jar"/>
-	<classpathentry kind="lib" path="lib/xmlrpc-3.0/lib/xmlrpc-server-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/xmlrpc-common-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/xmlrpc-server-3.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/tika-0.2-SNAPSHOT-standalone.jar"/>
+	<classpathentry kind="lib" path="lib/jodconverter.jar"/>
+	<classpathentry kind="lib" path="lib/tika-0.2-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.5-beta3/poi-3.5-beta3-20080926.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/asm-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.5-beta3/poi-contrib-3.5-beta3-20080926.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.5-beta3/poi-jdk14-3.5-beta3-20080926.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.5-beta3/poi-ooxml-3.5-beta3-20080926.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.5-beta3/poi-scratchpad-3.5-beta3-20080926.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox-0.7.3.jar"/>
+	<classpathentry kind="lib" path="lib/fontbox-0.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/icu4j-3.4.4.jar"/>
+	<classpathentry kind="lib" path="lib/junit-3.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/nekohtml-0.9.5.jar"/>
+	<classpathentry kind="lib" path="lib/ooxml-lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/ooxml-lib/jaxen-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/ooxml-lib/jsr173_1.0_api.jar"/>
+	<classpathentry kind="lib" path="lib/ooxml-lib/ooxml-schemas.jar"/>
+	<classpathentry kind="lib" path="lib/ooxml-lib/openxml4j-bin-beta-080728.jar"/>
+	<classpathentry kind="lib" path="lib/ooxml-lib/xercesImpl-2.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/ooxml-lib/xmlbeans-2.3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
