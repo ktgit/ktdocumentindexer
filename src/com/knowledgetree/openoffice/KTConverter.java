@@ -1,21 +1,55 @@
 package com.knowledgetree.openoffice;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Hashtable;
 
+import org.artofsolving.jodconverter.DefaultDocumentFormatRegistry;
+import org.artofsolving.jodconverter.DocumentFormat;
+import org.artofsolving.jodconverter.DocumentFormatRegistry;
 import org.artofsolving.jodconverter.OfficeDocumentConverter;
+import org.artofsolving.jodconverter.office.ExternalProcessOfficeManager;
 import org.artofsolving.jodconverter.office.ManagedProcessOfficeManager;
 import org.artofsolving.jodconverter.office.OfficeManager;
 import org.artofsolving.jodconverter.util.OsUtils;
 
 
-
-public class KTConverter {
+/* Using a ResourcePool so our communications to the OpenOffice server are thread safe */
+public class KTConverter extends ResourcePool {
 
 	public static KTConverter ktc = null;
 	
+	/* No use besides testing */
+	public static void main(String[] args) {
+		KTConverter ktc = KTConverter.get();
+		byte[] data;
+		try {
+			data = getBytesFromFile(new File(args[0]));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(1);
+			return;
+		}
+		
+		try {
+			FileOutputStream fos = new FileOutputStream(new File(args[1]));
+			fos.write((byte[])ktc.ConvertDocument(data, "pdf").get("data"));
+			fos.flush();
+			fos.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		 
+		
+		
+	}
 	
 	public static KTConverter get() {
 		if(ktc == null) {
@@ -25,15 +59,11 @@ public class KTConverter {
 	}
 	
 	public KTConverter() {
-		// TODO: Global instantiation of Office Manager
+		super("OfficeManagers");
 	}
 	
-	// TODO: Complete implementation of method. Add configuration options.
-	public java.util.Map ConvertDocument(byte[] data, String fromType, String toType) {
+	public java.util.Map ConvertDocument(byte[] data, String toExtension) {
 		Hashtable result = new Hashtable();
-		
-		OfficeManager officeManager = getOfficeManager(8100);
-        officeManager.start();
         
         File tmpInputFile;
         File tmpOutputFile;
@@ -52,37 +82,86 @@ public class KTConverter {
 			return result;
 		}
         
+		DocumentFormatRegistry df = new DefaultDocumentFormatRegistry();
+
+		/* Consume off the pool */
+		ExternalProcessOfficeManager office = (ExternalProcessOfficeManager)this.getResource();
+		DocumentFormat ddf = df.getFormatByExtension(toExtension);
+		
+		if(ddf == null) {
+			/* Unsupported format */
+			result.put("status", "1");
+			result.put("message", "Unsupported format");
+			return result;
+		}
         
-        OfficeDocumentConverter converter = new OfficeDocumentConverter(officeManager);
+        OfficeDocumentConverter converter = new OfficeDocumentConverter(office);
         try {
-            if (fromType == null) {
-                converter.convert(tmpInputFile, tmpOutputFile);
-            }
+                converter.convert(tmpInputFile, tmpOutputFile, ddf);
         } finally {
-            officeManager.stop();
+        	/* Produce back to the pool */
+            this.releaseResource( office );
+        }
+        
+        byte[] fileData;
+        
+        try {
+        	fileData = getBytesFromFile(tmpOutputFile);
+        } catch(IOException ex) {
+        	ex.printStackTrace();
+        	result.put("status", "1");
+        	result.put("message", ex.getMessage());
+        	return result;
         }
 
+        result.put("status", "0");
+        result.put("data", fileData);
 		
+        /* Make sure we clean up */
+        tmpInputFile.delete();
+        tmpOutputFile.delete();
+        
 		return result;
 	}
 	
-	private static OfficeManager getOfficeManager(int port) {
-        String officeHome = System.getenv("OFFICE_HOME");
-        if (officeHome == null) {
-            //TODO try searching in standard locations
-            throw new RuntimeException("Please set your OFFICE_HOME environment variable.");
-        }
-        String acceptString = "socket,host=127.0.0.1,port=" + port;
-        return new ManagedProcessOfficeManager(new File(officeHome), guessDefaultProfileDir(), acceptString);
-    }
+	public static byte[] getBytesFromFile(File file) throws IOException {
+        InputStream is = new FileInputStream(file);
     
-
-    private static File guessDefaultProfileDir() {
-        if (OsUtils.isWindows()) {
-            return new File(System.getenv("APPDATA"), "OpenOffice.org2");
-        } else {
-            return new File(System.getProperty("user.home"), ".openoffice.org2");
+        // Get the size of the file
+        long length = file.length();
+    
+        if (length > Integer.MAX_VALUE) {
+            // File is too large
         }
+    
+        // Create the byte array to hold the data
+        byte[] bytes = new byte[(int)length];
+    
+        // Read in the bytes
+        int offset = 0;
+        int numRead = 0;
+        while (offset < bytes.length
+               && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+            offset += numRead;
+        }
+    
+        // Ensure all the bytes have been read in
+        if (offset < bytes.length) {
+            throw new IOException("Could not completely read file "+file.getName());
+        }
+    
+        // Close the input stream and return bytes
+        is.close();
+        return bytes;
     }
+
+	@Override
+	protected Object createNewResource() {
+		ExternalProcessOfficeManager office = new ExternalProcessOfficeManager();
+		office.setConnectOnStart(true);
+		office.start();
+		return office;
+	}
+	
 
 }

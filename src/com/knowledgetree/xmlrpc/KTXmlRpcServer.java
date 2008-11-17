@@ -8,7 +8,10 @@
 
 package com.knowledgetree.xmlrpc;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -20,6 +23,7 @@ import org.apache.xmlrpc.server.XmlRpcServerConfigImpl;
 import org.apache.xmlrpc.webserver.WebServer;
 
 import com.knowledgetree.lucene.IndexerManager;
+import com.knowledgetree.openoffice.KTConverter;
 
 public class KTXmlRpcServer {
 
@@ -71,7 +75,9 @@ public class KTXmlRpcServer {
         phm.addHandler("indexer", com.knowledgetree.lucene.IndexerInterface.class);        
         phm.addHandler("textextraction", com.knowledgetree.textextraction.KTTextExtractorInterface.class);
         phm.addHandler("metadata",com.knowledgetree.metadata.KTMetaDataInterface.class);
+        phm.addHandler("openoffice",com.knowledgetree.openoffice.KTConverterInterface.class);
         phm.addHandler("control", com.knowledgetree.xmlrpc.KTXmlRpcServerInterface.class);
+        
         
         xmlRpcServer.setHandlerMapping(phm);
       
@@ -80,6 +86,7 @@ public class KTXmlRpcServer {
         serverConfig.setContentLengthOptional(false);
         
         manager.getLogger().info("Starting web server on port: " + manager.getPort());
+        
         
         // start the server finally!
         webServer.start();
@@ -142,5 +149,7 @@ public class KTXmlRpcServer {
 		this.logger.info("Shutting down...");
 		KTXmlRpcServer.webServer.shutdown();
 	}
+	
+	
 
 }

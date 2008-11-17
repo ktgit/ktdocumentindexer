@@ -21,4 +21,11 @@ Class-Path: lib/commons-lang-2.3.jar lib/commons-logging-1.1.jar lib/log4j-1.2.1
   lib/poi-3.5-beta3/poi-ooxml-3.5-beta3-20080926.jar
   lib/poi-3.5-beta3/poi-scratchpad-3.5-beta3-20080926.jar
   lib/tika-0.2-SNAPSHOT.jar
+  lib/jodconverter.jar
+  lib/ridl.jar
+  lib/java_uno.jar
+  lib/juh.jar
+  lib/jurt.jar
+  lib/unoloader.jar
+  lib/unoil.jar
  

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="lib/lucene-2.1.0/src/demo"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.jar"/>
@@ -33,5 +32,11 @@
 	<classpathentry kind="lib" path="lib/ooxml-lib/openxml4j-bin-beta-080728.jar"/>
 	<classpathentry kind="lib" path="lib/ooxml-lib/xercesImpl-2.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/ooxml-lib/xmlbeans-2.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/ridl.jar"/>
+	<classpathentry kind="lib" path="lib/java_uno.jar"/>
+	<classpathentry kind="lib" path="lib/juh.jar"/>
+	<classpathentry kind="lib" path="lib/jurt.jar"/>
+	<classpathentry kind="lib" path="lib/unoloader.jar"/>
+	<classpathentry kind="lib" path="lib/unoil.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
