@@ -15,12 +15,11 @@ Class-Path: lib/commons-lang-2.3.jar lib/commons-logging-1.1.jar lib/log4j-1.2.1
   lib/ooxml-lib/xercesImpl-2.8.1.jar
   lib/ooxml-lib/xmlbeans-2.3.0.jar
   lib/pdfbox-0.7.3.jar
-  lib/poi-3.5-beta3/poi-3.5-beta3-20080926.jar
-  lib/poi-3.5-beta3/poi-contrib-3.5-beta3-20080926.jar
-  lib/poi-3.5-beta3/poi-jdk14-3.5-beta3-20080926.jar
-  lib/poi-3.5-beta3/poi-ooxml-3.5-beta3-20080926.jar
-  lib/poi-3.5-beta3/poi-scratchpad-3.5-beta3-20080926.jar
-  lib/tika-0.2-SNAPSHOT.jar
+  lib/poi-3.5-beta4/poi-3.5-beta4-20090119.jar
+  lib/poi-3.5-beta4/poi-contrib-3.5-beta4-20090119.jar
+  lib/poi-3.5-beta4/poi-ooxml-3.5-beta4-20090119.jar
+  lib/poi-3.5-beta4/poi-scratchpad-3.5-beta4-20090119.jar
+  lib/tika-0.3-SNAPSHOT.jar
   lib/jodconverter.jar
   lib/ridl.jar
   lib/java_uno.jar
