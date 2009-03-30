@@ -32,10 +32,10 @@
 	<classpathentry kind="lib" path="lib/jurt.jar"/>
 	<classpathentry kind="lib" path="lib/unoloader.jar"/>
 	<classpathentry kind="lib" path="lib/unoil.jar"/>
-	<classpathentry kind="lib" path="lib/tika-0.3-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/poi-3.5-beta4/poi-3.5-beta4-20090119.jar"/>
-	<classpathentry kind="lib" path="lib/poi-3.5-beta4/poi-contrib-3.5-beta4-20090119.jar"/>
-	<classpathentry kind="lib" path="lib/poi-3.5-beta4/poi-ooxml-3.5-beta4-20090119.jar"/>
-	<classpathentry kind="lib" path="lib/poi-3.5-beta4/poi-scratchpad-3.5-beta4-20090119.jar"/>
+	<classpathentry kind="lib" path="lib/tika-0.3-standalone.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.5-beta5/poi-3.5-beta5.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.5-beta5/poi-contrib-3.5-beta5.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.5-beta5/poi-ooxml-3.5-beta5.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.5-beta5/poi-scratchpad-3.5-beta5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
