@@ -1,7 +1,7 @@
-package com.knowledgetree.xmlrpc;
+package com.knowledgetree.lucene;
 
 
-	public class KTXmlRpcServerInterface {
+	public class KTLuceneServerInterface {
 	
 	/**
 	 * Shut the server down.
@@ -11,7 +11,7 @@ package com.knowledgetree.xmlrpc;
 	 */
 	public int shutdown(String ktid,String token) throws Exception  
 	{
-		KTXmlRpcServer manager = KTXmlRpcServer.get();		
+		KTLuceneServer manager = KTLuceneServer.get();		
 		
 		if (!manager.authenticate(token))
 		{

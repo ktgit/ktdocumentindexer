@@ -6,7 +6,8 @@
  *
  */
 
-package com.knowledgetree.xmlrpc;
+package com.knowledgetree.lucene;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,14 +23,15 @@ import org.apache.xmlrpc.server.XmlRpcServer;
 import org.apache.xmlrpc.server.XmlRpcServerConfigImpl;
 import org.apache.xmlrpc.webserver.WebServer;
 
-import com.knowledgetree.lucene.IndexerManager;
-import com.knowledgetree.openoffice.KTConverter;
+import com.knowledgetree.indexer.IndexerManager;
+//import com.knowledgetree.openoffice.KTConverter;
 
-public class KTXmlRpcServer {
+public class KTLuceneServer {
 
 	public static WebServer webServer;
-	private static KTXmlRpcServer xmlRpcServer;
-	
+	private static KTLuceneServer luceneServer;
+    
+	public static final String KnowledgeTreeLoggingProperties = "KnowledgeTreeIndexer.Logging.properties";
 	private Logger logger;
 	private int port = 8875;
 	private boolean paranoid = true;
@@ -40,9 +42,9 @@ public class KTXmlRpcServer {
 	public static void main(String[] args) throws Exception 
 	{
 		// load properties from configuration file
-		PropertyConfigurator.configure(IndexerManager.KnowledgeTreeLoggingProperties);
+		PropertyConfigurator.configure(KTLuceneServer.KnowledgeTreeLoggingProperties);
 		
-		KTXmlRpcServer manager = KTXmlRpcServer.get();
+		KTLuceneServer manager = KTLuceneServer.get();
 		
 		// setup the basic web server
 		webServer = new WebServer(manager.getPort());
@@ -65,18 +67,19 @@ public class KTXmlRpcServer {
 			manager.getLogger().info("Server trusting everyone!");
 		}
 	    
+        // Get the indexing manager and set up the indexing parameters
+        IndexerManager indexer = IndexerManager.get();        
+        
 		// setup the xmlrpc server 	
         XmlRpcServer xmlRpcServer = webServer.getXmlRpcServer();      
         PropertyHandlerMapping phm = new PropertyHandlerMapping(); 
         
         /* Start-up the services */
-        com.knowledgetree.lucene.IndexerManager.get();
-       
-        phm.addHandler("indexer", com.knowledgetree.lucene.IndexerInterface.class);        
+        phm.addHandler("indexer", com.knowledgetree.indexer.IndexerInterface.class);        
         phm.addHandler("textextraction", com.knowledgetree.textextraction.KTTextExtractorInterface.class);
         phm.addHandler("metadata",com.knowledgetree.metadata.KTMetaDataInterface.class);
         phm.addHandler("openoffice",com.knowledgetree.openoffice.KTConverterInterface.class);
-        phm.addHandler("control", com.knowledgetree.xmlrpc.KTXmlRpcServerInterface.class);
+        phm.addHandler("control", com.knowledgetree.lucene.KTLuceneServerInterface.class);
         
         
         xmlRpcServer.setHandlerMapping(phm);
@@ -86,18 +89,16 @@ public class KTXmlRpcServer {
         serverConfig.setContentLengthOptional(false);
         
         manager.getLogger().info("Starting web server on port: " + manager.getPort());
-        
-        
+                
         // start the server finally!
         webServer.start();
 	}
 	
-	public KTXmlRpcServer() {
+	public KTLuceneServer() {
 		this.logger  = Logger.getLogger("com.knowledgetree");		 
 		this.logger.info("XML-RPC Server starting up...");
-		// get the default parameters
+        
 		// load properties
-		
 		this.logger.info("Loading properties file: " + this.propertiesFilename);
 		Properties properties = new Properties();
 		try
@@ -113,18 +114,20 @@ public class KTXmlRpcServer {
 			System.exit(1);
 		}
 		
+        // get the default parameters
 		this.port = Integer.parseInt(properties.getProperty("server.port", Integer.toString(this.port)));
 		//this.threadDelay = Integer.parseInt(properties.getProperty("thread.delay", Integer.toString(this.threadDelay)));
 		this.paranoid = Boolean.parseBoolean(properties.getProperty("server.paranoid", Boolean.toString(this.paranoid)));		
 		this.clientIps = properties.getProperty("server.accept", clientIps);
 		this.authenticationToken =  properties.getProperty("auth.token", this.authenticationToken);
+        
 	}
 	
-	public static KTXmlRpcServer get() {
-		if(KTXmlRpcServer.xmlRpcServer == null) {
-			KTXmlRpcServer.xmlRpcServer = new KTXmlRpcServer();
+	public static KTLuceneServer get() {
+		if(KTLuceneServer.luceneServer == null) {
+			KTLuceneServer.luceneServer = new KTLuceneServer();
 		}
-		return KTXmlRpcServer.xmlRpcServer;
+		return KTLuceneServer.luceneServer;
 	}
 
 	public boolean authenticate(String token) {
@@ -147,9 +150,6 @@ public class KTXmlRpcServer {
 	public void shutdown()
 	{
 		this.logger.info("Shutting down...");
-		KTXmlRpcServer.webServer.shutdown();
+		KTLuceneServer.webServer.shutdown();
 	}
-	
-	
-
 }

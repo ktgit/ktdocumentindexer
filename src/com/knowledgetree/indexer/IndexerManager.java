@@ -6,7 +6,7 @@
  *
  */
 
-package com.knowledgetree.lucene;
+package com.knowledgetree.indexer;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -41,7 +41,7 @@ import org.apache.lucene.search.highlight.SimpleFragmenter;
 import org.apache.lucene.search.highlight.TokenGroup;
 import org.apache.lucene.search.TermQuery;
 
-import com.knowledgetree.xmlrpc.KTXmlRpcServer;
+import com.knowledgetree.lucene.KTLuceneServer;
 
 public class IndexerManager implements Formatter
 {
@@ -77,7 +77,7 @@ public class IndexerManager implements Formatter
 	 */
 	public boolean authenticate(String token)
 	{
-		return KTXmlRpcServer.get().authenticate(token); 
+		return KTLuceneServer.get().authenticate(token); 
 	}
 	
 	/**

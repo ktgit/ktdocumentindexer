@@ -6,9 +6,9 @@
  *
  */
 
-package com.knowledgetree.lucene;
+package com.knowledgetree.indexer;
 
-import com.knowledgetree.xmlrpc.TokenAuthenticationException;
+import com.knowledgetree.lucene.TokenAuthenticationException;
 
 // TODO: ktid has been added for future use!
 // idea is that KT Live can pass ktid, which would mean one indexing server could manage multiple
