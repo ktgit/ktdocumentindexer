@@ -56,7 +56,7 @@ public class IndexerManager implements Formatter
 	private String 						indexDirectory 		= "c:/kt/ktlucene/indexes";
 	private String						propertiesFilename 	= "KnowledgeTreeIndexer.properties";
 	private String 						clientIps 			= "127.0.0.1,192.168.1.1";
-	private int							maxQueryResult		= 100;
+	private int							maxQueryResult		= 1000;
 	private Date						startDate;
 	private	int							documentsAddCount	= 0;
 	private	int							documentsDeleteCount	= 0;
