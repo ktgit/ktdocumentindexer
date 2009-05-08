@@ -1,0 +1,11 @@
+= KTDocumentIndexer
+
+KTDocumentIndexer is a subproject of KnowledgeTree (http://github.com/ktgit/knowledgetree) that provides document indexing and metadata insertion.
+
+= Forking
+
+Please feel free to fork this code and contribute your changes back via the BitHub forks system.
+
+== Please Note
+
+2009-05-08 - This code is currently under very heavy development and will be changing frequently and in large ways.
