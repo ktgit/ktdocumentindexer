@@ -1,5 +1,9 @@
 package com.knowledgetree.textextraction;
 
+//import java.util.regex.*;
+
+import java.lang.Character;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -16,9 +20,13 @@ public class StringHandler implements ContentHandler {
 
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {
-		// TODO Auto-generated method stub
 		for(int i=0;i<ch.length;i++) {
-			this.buffer += ch[i];
+            // skip control characters in output, don't want these for 
+            // a text extraction and they cause issues with the xml response
+            if (!Character.isISOControl(ch[i]))
+            {
+                this.buffer += ch[i];
+            }
 		}
 	}
 
@@ -78,7 +86,7 @@ public class StringHandler implements ContentHandler {
 	}
 	
 	public String getString() {
-		return this.buffer;
+        return this.buffer;
 	}
 
 }
