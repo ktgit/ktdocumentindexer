@@ -4,7 +4,8 @@ KTDocumentIndexer is a subproject of KnowledgeTree (http://github.com/ktgit/know
 
 = Forking
 
-Please feel free to fork this code and contribute your changes back via the BitHub forks system.
+Please feel free to fork this code and contribute your changes back via the GitHub forks system.
+See http://github.com/guides/keeping-a-git-fork-in-sync-with-the-forked-repo for more info.
 
 == Please Note
 
