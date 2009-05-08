@@ -1,167 +1,108 @@
 package com.knowledgetree.openoffice;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Hashtable;
 
-import org.artofsolving.jodconverter.DefaultDocumentFormatRegistry;
-import org.artofsolving.jodconverter.DocumentFormat;
-import org.artofsolving.jodconverter.DocumentFormatRegistry;
-import org.artofsolving.jodconverter.OfficeDocumentConverter;
-import org.artofsolving.jodconverter.office.ExternalProcessOfficeManager;
-import org.artofsolving.jodconverter.office.ManagedProcessOfficeManager;
-import org.artofsolving.jodconverter.office.OfficeManager;
-import org.artofsolving.jodconverter.util.OsUtils;
+import org.apache.log4j.Logger;
+
+import com.artofsolving.jodconverter.DefaultDocumentFormatRegistry;
+import com.artofsolving.jodconverter.DocumentFormat;
+import com.artofsolving.jodconverter.DocumentFormatRegistry;
+import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConverter;
+import com.artofsolving.jodconverter.openoffice.connection.SocketOpenOfficeConnection;
+import com.artofsolving.jodconverter.openoffice.connection.OpenOfficeException;
+//import com.artofsolving.jodconverter.openoffice.connection.PipeOpenOfficeConnection;
 
 
 /* Using a ResourcePool so our communications to the OpenOffice server are thread safe */
 public class KTConverter extends ResourcePool {
 
-	public static KTConverter ktc = null;
+	public static KTConverter       ktc     = null;
+    private Logger 					logger;
+    private int                     ooPort  = 8100;
+    private String                  ooHost  = "127.0.0.1";
 	
-	/* No use besides testing */
-	public static void main(String[] args) {
-		KTConverter ktc = KTConverter.get();
-		byte[] data;
-		try {
-			data = getBytesFromFile(new File(args[0]));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.exit(1);
-			return;
-		}
-		
-		try {
-			FileOutputStream fos = new FileOutputStream(new File(args[1]));
-			fos.write((byte[])ktc.ConvertDocument(data, "pdf").get("data"));
-			fos.flush();
-			fos.close();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		 
-		
-		
-	}
-	
-	public static KTConverter get() {
+    /**
+     * Returns the converter object
+     * @return KTConverter
+     */
+	public static KTConverter get(String host, int port) {
 		if(ktc == null) {
-			ktc = new KTConverter();
+			ktc = new KTConverter(host, port);
 		}
 		return ktc;
 	}
 	
-	public KTConverter() {
+    /**
+     * Constructor
+     */
+	public KTConverter(String host, int port) {
 		super("OfficeManagers");
+        
+        // set the host and port to connect to open office on
+        this.ooHost = host;
+        this.ooPort = port;
+        
+        // set up logging
+        this.logger  = Logger.getLogger("com.knowledgetree.openoffice");		 
+        this.logger.info("JODConverter starting...");
 	}
 	
-	public java.util.Map ConvertDocument(byte[] data, String toExtension) {
-		Hashtable result = new Hashtable();
-        
-        File tmpInputFile;
-        File tmpOutputFile;
-		try {
-			tmpInputFile = File.createTempFile("ktinput", null);
-			FileOutputStream fos = new FileOutputStream(tmpInputFile);
-			fos.write(data);
-			fos.flush();	
-			fos.close();
-			
-			tmpOutputFile = File.createTempFile("ktoutput", null);
-		} catch (IOException e) {
-			e.printStackTrace();
-			result.put("status", "1");
-			result.put("message", e.getMessage());
-			return result;
-		}
-        
-		DocumentFormatRegistry df = new DefaultDocumentFormatRegistry();
-
-		/* Consume off the pool */
-		ExternalProcessOfficeManager office = (ExternalProcessOfficeManager)this.getResource();
-		DocumentFormat ddf = df.getFormatByExtension(toExtension);
-		
-		if(ddf == null) {
-			/* Unsupported format */
-			result.put("status", "1");
-			result.put("message", "Unsupported format");
-			return result;
-		}
-        
-        OfficeDocumentConverter converter = new OfficeDocumentConverter(office);
-        try {
-                converter.convert(tmpInputFile, tmpOutputFile, ddf);
-        } finally {
-        	/* Produce back to the pool */
-            this.releaseResource( office );
+    /**
+     * Convert the document based on the extension of the given source and target files.
+     * If the target file has a .pdf extension then the source file is converted to a pdf document.
+     *
+     * @param String sourceFilename The document to be converted
+     * @param String targetFilename The file to save the converted document to. The file extension determines the conversion type.
+     */
+    public int ConvertDocument(String sourceFilename, String targetFilename)
+    {
+        // Get a connection to open office - one is created if none exist or are available
+        SocketOpenOfficeConnection office = (SocketOpenOfficeConnection)this.getResource();
+        //PipeOpenOfficeConnection office = (PipeOpenOfficeConnection)this.getResource();
+        if(office == null){
+            return -1;
         }
         
-        byte[] fileData;
+        // Get the document converter
+        OpenOfficeDocumentConverter converter = new OpenOfficeDocumentConverter(office);
         
-        try {
-        	fileData = getBytesFromFile(tmpOutputFile);
-        } catch(IOException ex) {
-        	ex.printStackTrace();
-        	result.put("status", "1");
-        	result.put("message", ex.getMessage());
-        	return result;
-        }
-
-        result.put("status", "0");
-        result.put("data", fileData);
-		
-        /* Make sure we clean up */
-        tmpInputFile.delete();
-        tmpOutputFile.delete();
+        File source = new File(sourceFilename);
+        File target = new File(targetFilename);
         
-		return result;
-	}
-	
-	public static byte[] getBytesFromFile(File file) throws IOException {
-        InputStream is = new FileInputStream(file);
-    
-        // Get the size of the file
-        long length = file.length();
-    
-        if (length > Integer.MAX_VALUE) {
-            // File is too large
+        try 
+        {
+            // Convert to the target document type
+            converter.convert(source, target);
         }
-    
-        // Create the byte array to hold the data
-        byte[] bytes = new byte[(int)length];
-    
-        // Read in the bytes
-        int offset = 0;
-        int numRead = 0;
-        while (offset < bytes.length
-               && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
-            offset += numRead;
+        catch (Exception ex) 
+        {
+            this.logger.error("JODConverter: failure to convert file with message: " + ex.getMessage());
+            return -1;
         }
-    
-        // Ensure all the bytes have been read in
-        if (offset < bytes.length) {
-            throw new IOException("Could not completely read file "+file.getName());
+        finally 
+        {
+            // Release the connection to open office
+            releaseResource(office);
         }
-    
-        // Close the input stream and return bytes
-        is.close();
-        return bytes;
+        return 0;
     }
-
+    
 	@Override
-	protected Object createNewResource() {
-		ExternalProcessOfficeManager office = new ExternalProcessOfficeManager();
-		office.setConnectOnStart(true);
-		office.start();
-		return office;
+	protected Object createNewResource()
+    {
+        // Connect to OpenOffice on the given host and port
+        try {
+            SocketOpenOfficeConnection office = new SocketOpenOfficeConnection(this.ooHost, this.ooPort);
+            //PipeOpenOfficeConnection office = new PipeOpenOfficeConnection();
+            office.connect();
+            return office;
+        }
+        catch (Exception ex) {
+            this.logger.error("JODConverter: failed to connect to OpenOffice on host: " + this.ooHost + " and port: " + this.ooPort + " with message: " + ex.getMessage());
+            return null;
+        }
 	}
-	
-
+    
 }

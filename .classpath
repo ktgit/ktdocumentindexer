@@ -10,7 +10,6 @@
 	<classpathentry kind="lib" path="lib/xmlrpc-common-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/xmlrpc-server-3.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/jodconverter.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/asm-3.1.jar"/>
@@ -26,12 +25,16 @@
 	<classpathentry kind="lib" path="lib/ooxml-lib/openxml4j-bin-beta-080728.jar"/>
 	<classpathentry kind="lib" path="lib/ooxml-lib/xercesImpl-2.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/ooxml-lib/xmlbeans-2.3.0.jar"/>
-	<classpathentry kind="lib" path="lib/ridl.jar"/>
 	<classpathentry kind="lib" path="lib/java_uno.jar"/>
-	<classpathentry kind="lib" path="lib/juh.jar"/>
-	<classpathentry kind="lib" path="lib/jurt.jar"/>
 	<classpathentry kind="lib" path="lib/unoloader.jar"/>
-	<classpathentry kind="lib" path="lib/unoil.jar"/>
+	<classpathentry kind="lib" path="lib/jodconverter-2.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/juh-3.0.1.jar
+    <classpathentry kind="lib" path="lib/jurt-3.0.1.jar
+    <classpathentry kind="lib" path="lib/ridl-3.0.1.jar
+    <classpathentry kind="lib" path="lib/slf4j-api-1.5.6.jar
+    <classpathentry kind="lib" path="lib/slf4j-jdk14-1.5.6.jar
+    <classpathentry kind="lib" path="lib/unoil-3.0.1.jar
+    <classpathentry kind="lib" path="lib/xstream-1.3.1.jar
 	<classpathentry kind="lib" path="lib/tika-0.3-standalone.jar"/>
 	<classpathentry kind="lib" path="lib/poi-3.5-beta5/poi-3.5-beta5.jar"/>
 	<classpathentry kind="lib" path="lib/poi-3.5-beta5/poi-contrib-3.5-beta5.jar"/>

@@ -4,8 +4,8 @@ import com.knowledgetree.metadata.KTMetaData;
 
 public class KTConverterInterface {
 	
-	public java.util.Map convertDocument(byte[] data, String toExtension) {	
-		KTConverter converter = KTConverter.get(); 
-		return converter.ConvertDocument(data, toExtension);
+	public int convertDocument(String sourceFilename, String targetFilename, String host, int port) {	
+		KTConverter converter = KTConverter.get(host, port); 
+		return converter.ConvertDocument(sourceFilename, targetFilename);
 	}
 }
