@@ -1,6 +1,11 @@
 package com.knowledgetree.metadata;
 
+import org.apache.log4j.Logger;
 
+import java.io.InputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,7 +30,15 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 public class KTMetaData {
 
 	private static KTMetaData metaDataHandler = null;
+    private Logger 						logger;
 	
+    private KTMetaData()
+    {
+        this.logger  = Logger.getLogger("com.knowledgetree.metadata");		 
+        this.logger.info("Properties handler starting...");
+    }
+    
+    
 	public static KTMetaData get() {
 		if(metaDataHandler == null) {
 			metaDataHandler = new KTMetaData();
@@ -34,35 +47,33 @@ public class KTMetaData {
 		return metaDataHandler;
 	}
 	
-	
-	
-	public java.util.Map addMetaData(byte[] data, String mimeType, java.util.Map<String, String> metaData) {
-		/* Prepare our result */
-		java.util.Hashtable result = new java.util.Hashtable();
-		POIFSFileSystem poifs;
-		
-		/* Converting our byte array into a byte stream for the POIFS adapter */
-		ByteArrayInputStream ba = new ByteArrayInputStream(data);
-		
-		try {
-		    poifs = new POIFSFileSystem(ba);
-		} catch(IOException e) {
-			/* Probably not a valid OLE2 document */
-			e.printStackTrace();
-			result.put("status", "1");
-			result.put("message", e.getMessage());
-			return result;
-		}
-	
-		
-		DirectoryEntry dir = poifs.getRoot();
-		
-		DocumentSummaryInformation dsi;
+    public int writeMetadata(String fileName, String targetFile, java.util.Map metadata)
+    {
+        this.logger.debug("POI Properties: Write metadata to file " + fileName);
+        POIFSFileSystem poifs;
+        
         try
         {
-        	/* We are now going to get the virtual document out of the POIFS containing metadata */
-            DocumentEntry dsiEntry = (DocumentEntry)
-                dir.getEntry(DocumentSummaryInformation.DEFAULT_STREAM_NAME);
+            // Create a POIFileSystem object from the input document
+            FileInputStream inStream = new FileInputStream(fileName);
+            poifs = new POIFSFileSystem(inStream);
+            inStream.close();
+        }
+        catch (Exception ex) 
+        {
+            this.logger.error("POI Properties: Input file could not be opened: " + ex.getMessage());
+            ex.printStackTrace();
+            return -1;
+        }
+        
+        // Get the POIFS document 
+        DirectoryEntry dir = poifs.getRoot();
+        
+        // Read the document summary information. 
+        DocumentSummaryInformation dsi;
+        try
+        {
+            DocumentEntry dsiEntry = (DocumentEntry)dir.getEntry(DocumentSummaryInformation.DEFAULT_STREAM_NAME);
             DocumentInputStream dis = new DocumentInputStream(dsiEntry);
             PropertySet ps = new PropertySet(dis);
             dis.close();
@@ -70,12 +81,10 @@ public class KTMetaData {
         }
         catch (Exception ex)
         {
-            /* There is no document summary information yet. We have to create a
-             * new one. */
+            // There is no document summary information yet. We have to create a new one. 
             dsi = PropertySetFactory.newDocumentSummaryInformation();
+            this.logger.debug("POI Properties: Creating new document summary information: " + ex.getMessage());
         }
-		
-        
         
         CustomProperties customProperties = dsi.getCustomProperties();
         
@@ -83,78 +92,79 @@ public class KTMetaData {
         	customProperties = new CustomProperties();
         }
         
-        
-       
-        
-        Set keys = metaData.keySet();
+        Set keys = metadata.keySet();
         Iterator iter = keys.iterator();
         
-        while(iter.hasNext()) { /* Iterate through the keys and set them as data onto the CustomProperties */
+        // Iterate through the keys and set them as data onto the CustomProperties
+        while(iter.hasNext()) { 
         	String key = (String)iter.next();
-        	customProperties.put(key, (String)metaData.get(key));
+            String value = (String)metadata.get(key);
+        	customProperties.put(key, value);
         }
         
-        /* We must set them, incase we instantiated a new object */
+        // We must set them, incase we instantiated a new object 
         dsi.setCustomProperties(customProperties);
         
         try {
-        	/* Write back the summary file */
+        	// Write back the summary file 
         	dsi.write(dir, DocumentSummaryInformation.DEFAULT_STREAM_NAME);
         } catch(Exception ex) {
+            this.logger.error("POI Properties: Could not write custom properties to document summary information: " + ex.getMessage());
         	ex.printStackTrace();
-        	result.put("status", "1");
-			result.put("message", ex.getMessage());
-			return result;
+			return -1;
         }
         
-       
-        /* Put it back into a byte array for us */
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		
-		try {
-			poifs.writeFilesystem(out);
-		} catch(Exception ex) {
-        	ex.printStackTrace();
-        	result.put("status", "1");
-			result.put("message", ex.getMessage());
-			return result;
-		}
-		
-	
-		result.put("status", "0");
-		result.put("data", out.toByteArray());
-		
-		
-		return result;
-	}
-	
-	public java.util.Map readMetaData(byte[] data) {
-		/* Prepare our result */
-		java.util.Hashtable result = new java.util.Hashtable();
-		
-		POIFSFileSystem poifs;
-		
-		/* Converting our byte array into a byte stream for the POIFS adapter */
-		ByteArrayInputStream ba = new ByteArrayInputStream(data);
-		
-		try {
-		    poifs = new POIFSFileSystem(ba);
-		} catch(IOException e) {
-			/* Probably not a valid OLE2 document */
-			e.printStackTrace();
-			result.put("status", "1");
-			result.put("message", e.getMessage());
-			return result;
-		}
-		
-		DirectoryEntry dir = poifs.getRoot();
-		
-		DocumentSummaryInformation dsi;
         try
         {
-        	/* We are now going to get the virtual document out of the POIFS containing metadata */
-            DocumentEntry dsiEntry = (DocumentEntry)
-                dir.getEntry(DocumentSummaryInformation.DEFAULT_STREAM_NAME);
+            // Write output back to filesystem
+            FileOutputStream out = new FileOutputStream(targetFile);
+            poifs.writeFilesystem(out);
+            out.close();
+        }
+        catch (Exception ex) 
+        {
+            this.logger.error("POI Properties: Could not write output to file: " + ex.getMessage());
+            ex.printStackTrace();
+            return -1;
+        }
+        
+        
+        return 0;
+    }
+	
+		
+	public java.util.Map readMetadata(String fileName) 
+    {
+        this.logger.debug("POI Properties: Read metadata from file " + fileName);
+        
+		// Initialise result
+		java.util.Hashtable result = new java.util.Hashtable();
+        POIFSFileSystem poifs;
+        
+        try
+        {
+            // Create a POIFileSystem object from the input document
+            FileInputStream inStream = new FileInputStream(fileName);
+            poifs = new POIFSFileSystem(inStream);
+            inStream.close();
+        }
+        catch (Exception ex) 
+        {
+            this.logger.error("POI Properties: Input file could not be opened: " + ex.getMessage());
+            ex.printStackTrace();
+            
+            result.put("status", "1");
+            return result;
+        }
+        
+        // Get the POIFS document 
+        DirectoryEntry dir = poifs.getRoot();
+        
+        // Read the document summary information. 
+        DocumentSummaryInformation dsi;
+        try
+        {
+            DocumentEntry dsiEntry = (DocumentEntry)dir.getEntry(DocumentSummaryInformation.DEFAULT_STREAM_NAME);
             DocumentInputStream dis = new DocumentInputStream(dsiEntry);
             PropertySet ps = new PropertySet(dis);
             dis.close();
@@ -162,20 +172,19 @@ public class KTMetaData {
         }
         catch (Exception ex)
         {
-            /* There is no document summary information yet. We have to create a
-             * new one. */
+            // There is no document summary information yet. We have to create a new one. 
             dsi = PropertySetFactory.newDocumentSummaryInformation();
+            this.logger.debug("POI Properties: Creating new document summary information: " + ex.getMessage());
         }
-		
         
-        
+        // Get the custom properties
         CustomProperties customProperties = dsi.getCustomProperties();
-        
-        
         
         java.util.Hashtable metadata = new java.util.Hashtable();
         
         if(customProperties == null) {
+            this.logger.debug("POI Properties: No custom properties have been defined.");
+            
         	result.put("status", "0");
         	result.put("metadata", metadata);
         	return result;
@@ -184,16 +193,15 @@ public class KTMetaData {
         Set keys = customProperties.keySet();
         Iterator iter = keys.iterator();
         
-        while(iter.hasNext()) { /* Iterate through the keys and convert them to readable values */
+        // Iterate through the properties and convert them to readable values
+        while(iter.hasNext()) { 
         	String key = (String)iter.next();
         	String val = (String) customProperties.get(key);
         	metadata.put(key, val);
         }
         
-        
         result.put("status", "0");
         result.put("metadata", metadata);
-        
         return result;
 	}
 }
