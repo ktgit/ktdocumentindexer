@@ -19,11 +19,11 @@ import java.util.Properties;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
+import java.beans.Beans;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
@@ -53,9 +53,9 @@ public class IndexerManager implements Formatter
 	private Analyzer 					analyzer;
 	private ReentrantReadWriteLock 		locker;
 	private Logger 						logger;
-	private String 						indexDirectory 		= "c:/kt/ktlucene/indexes";
+	private String 						indexDirectory 		= "c:/tmp/indexes";
 	private String						propertiesFilename 	= "KnowledgeTreeIndexer.properties";
-	private String 						clientIps 			= "127.0.0.1,192.168.1.1";
+	private String 						clientIps 			= "127.0.0.1";
 	private int							maxQueryResult		= 1000;
 	private Date						startDate;
 	private	int							documentsAddCount	= 0;
@@ -124,6 +124,18 @@ public class IndexerManager implements Formatter
 	}
 	
 	/**
+	 * Gets analyzers from xml configuration file.
+	 * @throws XPathExpressionException 
+	 */
+	private Analyzer getAnalyzer(String analyzerClass) throws Exception {
+		Analyzer retval = null;
+		Object bean = Beans.instantiate(getClass().getClassLoader(), analyzerClass);
+		if (Beans.isInstanceOf(bean, Analyzer.class)) {
+			retval = (Analyzer) Beans.getInstanceOf(bean, Analyzer.class);
+		}
+		return retval;	
+	}
+	/**
 	 * Constructor for IndexerManager.
 	 * @throws Exception
 	 */
@@ -132,7 +144,7 @@ public class IndexerManager implements Formatter
 		this.logger  = Logger.getLogger("com.knowledgetree.lucene");		 
 		this.logger.info("Indexer starting up...");
 
-		this.analyzer = new StandardAnalyzer();
+		//this.analyzer = new StandardAnalyzer();
 		this.locker = new ReentrantReadWriteLock();
 		this.startDate = new Date();
 		
@@ -150,6 +162,8 @@ public class IndexerManager implements Formatter
 			this.logger.error("Problem loading properties: " + ex.getMessage());
 			throw ex;
 		}
+		
+		this.analyzer = getAnalyzer(properties.getProperty("indexer.analyzer"));
 
 		// test that the index folder exists and is writable
 		this.indexDirectory = properties.getProperty("indexer.directory", this.indexDirectory);
