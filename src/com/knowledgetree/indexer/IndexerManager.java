@@ -53,7 +53,7 @@ public class IndexerManager implements Formatter
 	private Analyzer 					analyzer;
 	private ReentrantReadWriteLock 		locker;
 	private Logger 						logger;
-	private String 						indexDirectory 		= "c:/tmp/indexes";
+	private String 						indexDirectory 		= "../../../var/indexes";
 	private String						propertiesFilename 	= "KnowledgeTreeIndexer.properties";
 	private String 						clientIps 			= "127.0.0.1";
 	private int							maxQueryResult		= 1000;
