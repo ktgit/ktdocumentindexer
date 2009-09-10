@@ -19,7 +19,7 @@ Class-Path: lib/commons-lang-2.3.jar lib/commons-logging-1.1.jar lib/log4j-1.2.1
   lib/poi-3.5-beta5/poi-contrib-3.5-beta5.jar
   lib/poi-3.5-beta5/poi-ooxml-3.5-beta5.jar
   lib/poi-3.5-beta5/poi-scratchpad-3.5-beta5.jar
-  lib/tika-0.3-standalone.jar
+  lib/tika-app-0.4.jar
   lib/jodconverter-2.2.2.jar
   lib/java_uno.jar
   lib/juh-3.0.1.jar
