@@ -62,8 +62,11 @@ public class KTConverter extends ResourcePool {
         SocketOpenOfficeConnection office = (SocketOpenOfficeConnection)this.getResource();
         //PipeOpenOfficeConnection office = (PipeOpenOfficeConnection)this.getResource();
         if(office == null){
+            this.logger.error("JODConverter: could not connect to Open Office");
             return -1;
         }
+        
+        this.logger.debug("JODConverter: creating OO Document converter");
         
         // Get the document converter
         OpenOfficeDocumentConverter converter = new OpenOfficeDocumentConverter(office);
@@ -73,6 +76,8 @@ public class KTConverter extends ResourcePool {
         
         try 
         {
+            this.logger.debug("JODConverter: attempting conversion of: " + sourceFilename + " to: " + targetFilename);
+            
             // Convert to the target document type
             converter.convert(source, target);
         }
@@ -83,6 +88,8 @@ public class KTConverter extends ResourcePool {
         }
         finally 
         {
+            this.logger.debug("JODConverter: conversion complete, releasing office");
+            
             // Release the connection to open office
             releaseResource(office);
         }
@@ -97,6 +104,8 @@ public class KTConverter extends ResourcePool {
             SocketOpenOfficeConnection office = new SocketOpenOfficeConnection(this.ooHost, this.ooPort);
             //PipeOpenOfficeConnection office = new PipeOpenOfficeConnection();
             office.connect();
+            
+            this.logger.debug("JODConverter: connecting to OpenOffice on host: " + this.ooHost + " and port: " + this.ooPort);
             return office;
         }
         catch (Exception ex) {

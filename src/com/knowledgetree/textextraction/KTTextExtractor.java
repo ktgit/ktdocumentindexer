@@ -66,6 +66,8 @@ public class KTTextExtractor {
 	 */
 	public int ExtractTextFromFile(String contentFilename, String outputFilename) 
     {
+        this.logger.debug("Text Extractor: file in: " + contentFilename + "; file out: " + outputFilename);
+        
         try 
         {
             // Open streams to the source file and target/output file
@@ -73,27 +75,28 @@ public class KTTextExtractor {
             FileOutputStream outStream = new FileOutputStream(outputFilename);
             
             // Use a writer to handle the output from the tika extractor
-            OutputStreamWriter out = new OutputStreamWriter(outStream, "UTF8");
-            ContentHandler handler = new BodyContentHandler(out);
+            OutputStreamWriter outFile = new OutputStreamWriter(outStream, "UTF8");
+            ContentHandler textHandler = new BodyContentHandler(outFile);
                     
             // Instantiate the Tika 'AutoDetect' Parser 
             AutoDetectParser parser = new AutoDetectParser();
+            Metadata metadata = new Metadata();
 
             try {
                 // Parse the file, the output is automatically written to the target file
-                parser.parse(inStream, handler, new Metadata());
+                parser.parse(inStream, textHandler, metadata);
                 
-                out.close();
+                outFile.close();
                 inStream.close();
             }
             catch (Exception ex) {
-                logger.error("Text Extractor: Failed with message - " + ex.getMessage());
+                this.logger.error("Text Extractor: Failed with message - " + ex.getMessage());
                 return -1;
             }
         }
         catch (Exception ex) 
         {
-            logger.error("Text Extractor: File could not be found - " + ex.getMessage());
+            this.logger.error("Text Extractor: File could not be found - " + ex.getMessage());
             return -1;
         }
         return 0;
