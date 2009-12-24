@@ -1,6 +1,6 @@
 package com.knowledgetree.openoffice;
 
-import com.knowledgetree.metadata.KTMetaData;
+//import com.knowledgetree.metadata.KTMetaData;
 
 public class KTConverterInterface {
 	

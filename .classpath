@@ -12,21 +12,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-1.4.jar"/>
-	<classpathentry kind="lib" path="lib/asm-3.1.jar"/>
-	<classpathentry kind="lib" path="lib/pdfbox-0.7.3.jar"/>
-	<classpathentry kind="lib" path="lib/fontbox-0.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/icu4j-3.4.4.jar"/>
 	<classpathentry kind="lib" path="lib/junit-3.8.1.jar"/>
-	<classpathentry kind="lib" path="lib/nekohtml-0.9.5.jar"/>
-	<classpathentry kind="lib" path="lib/ooxml-lib/dom4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="lib/ooxml-lib/jaxen-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/ooxml-lib/jsr173_1.0_api.jar"/>
-	<classpathentry kind="lib" path="lib/ooxml-lib/ooxml-schemas.jar"/>
-	<classpathentry kind="lib" path="lib/ooxml-lib/openxml4j-bin-beta-080728.jar"/>
-	<classpathentry kind="lib" path="lib/ooxml-lib/xercesImpl-2.8.1.jar"/>
-	<classpathentry kind="lib" path="lib/ooxml-lib/xmlbeans-2.3.0.jar"/>
-	<classpathentry kind="lib" path="lib/java_uno.jar"/>
-	<classpathentry kind="lib" path="lib/unoloader.jar"/>
 	<classpathentry kind="lib" path="lib/jodconverter-2.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/juh-3.0.1.jar"/>
     <classpathentry kind="lib" path="lib/jurt-3.0.1.jar"/>
@@ -36,9 +22,14 @@
     <classpathentry kind="lib" path="lib/unoil-3.0.1.jar"/>
     <classpathentry kind="lib" path="lib/xstream-1.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/tika-app-0.4.jar"/>
-	<classpathentry kind="lib" path="lib/poi-3.5-beta5/poi-3.5-beta5.jar"/>
-	<classpathentry kind="lib" path="lib/poi-3.5-beta5/poi-contrib-3.5-beta5.jar"/>
-	<classpathentry kind="lib" path="lib/poi-3.5-beta5/poi-ooxml-3.5-beta5.jar"/>
-	<classpathentry kind="lib" path="lib/poi-3.5-beta5/poi-scratchpad-3.5-beta5.jar"/>
+    <classpathentry kind="lib" path="lib/poi-3.6/poi-3.6.jar"/>
+    <classpathentry kind="lib" path="lib/poi-3.6/poi-contrib-3.6.jar"/>
+    <classpathentry kind="lib" path="lib/poi-3.6/poi-examples-3.6.jar"/>
+    <classpathentry kind="lib" path="lib/poi-3.6/poi-ooxml-3.6.jar"/>
+    <classpathentry kind="lib" path="lib/poi-3.6/poi-ooxml-schemas-3.6.jar"/>
+    <classpathentry kind="lib" path="lib/poi-3.6/poi-scratchpad-3.6.jar"/>
+    <classpathentry kind="lib" path="lib/poi-3.6/ooxml-lib/dom4j-1.6.1.jar"/>
+    <classpathentry kind="lib" path="lib/poi-3.6/ooxml-lib/geronimo-stax-api_1.0_spec-1.0.jar"/>
+    <classpathentry kind="lib" path="lib/poi-3.6/ooxml-lib/xmlbeans-2.3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
